@@ -1,0 +1,71 @@
+{% extends 'user-base.html' %}
+{% load staticfiles %}
+{% block title %}
+<title>我的课程</title>
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'user:home' %}">个人中心</a>></li>
+                <li>我的课程</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <div class="right" >
+		<div class="personal_des Releasecont">
+			<div class="head">
+				<h1>我的课程</h1>
+			</div>
+		</div>
+		<div class="personal_des permessage">
+			<div class="companycenter">
+				<div class="group_list brief">
+                {% for course in my_courses.object_list %}
+                    <div class="module1_5 box">
+                            <a href="{% url 'course:course_detail' course.id %}">
+                                <img width="214" height="190" class="scrollLoading" src="{{ MEDIA_URL }}{{ course.image }}"/>
+                            </a>
+                            <div class="des">
+                                <a href="{% url 'course:course_detail' course.id %}"><h2>{{ course.name }}</h2></a>
+                                <span class="fl">课时：<i class="key">{{ course.get_learn_time }}</i></span>
+                                <span class="fr">学习人数：{{ course.student_num }}</span>
+                            </div>
+                            <div class="bottom">
+                                <span class="fl">{{ course.course_org }}</span>
+                                <span class="star fr  notlogin {% if course.id in fav_course_ids %}collected{% endif %}" data-favid="15">{{ course.fav_num }}</span>
+                            </div>
+                        </div>
+                {% endfor %}
+                <div class="pageturn">
+                    <ul class="pagelist">
+                    {% if my_courses.has_previous %}
+                        <li class="long"><a href="?{{ my_courses.previous_page_number.querystring }}">上一页</a></li>
+                    {% endif %}
+                    {% for page in my_courses.pages %}
+                        {% if page %}
+                            {% ifequal page my_courses.number %}
+                        <li class="active"><a class="page">{{ page }}</a> </li>
+                            {% else %}
+                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                        <li class="none"><span>...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if my_courses.has_next %}
+                        <li class="long"><a href="?{{ my_courses.next_page_number.querystring }}">下一页</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
